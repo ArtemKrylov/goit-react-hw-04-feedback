@@ -1,4 +1,16 @@
 import styled from 'styled-components';
+import AppComponent from './App';
+
+const App = styled(AppComponent)`
+  display: flex;
+  flex-direction: column;
+  ${props => props.theme.media.tablet} {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+`;
+export default App;
 
 export const Container = styled.div`
   margin-left: auto;
@@ -14,7 +26,7 @@ export const Container = styled.div`
   }
 
   ${props => props.theme.media.desktop} {
-    width: 1280px;
+    width: 1024 px;
   }
 `;
 
