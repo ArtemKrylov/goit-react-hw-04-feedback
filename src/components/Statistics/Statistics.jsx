@@ -1,4 +1,3 @@
-import Notification from 'components/Notification';
 import PropTypes from 'prop-types';
 
 const Statistics = ({
@@ -9,7 +8,7 @@ const Statistics = ({
   positivePercentage,
   className,
 }) => {
-  return total > 0 ? (
+  return (
     <ul className={className}>
       <li className={`statistics__item`}>
         <div className={`statistics__value`}>
@@ -44,11 +43,6 @@ const Statistics = ({
         </div>
       </li>
     </ul>
-  ) : (
-    <Notification
-      message="There is no feedback"
-      className="statistics__notification"
-    />
   );
 };
 

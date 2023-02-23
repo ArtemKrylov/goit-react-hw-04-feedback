@@ -5,6 +5,7 @@ import { GlobalStyle } from '../GlobalStyle';
 import FeedbackOptions from 'components/FeedbackOptions';
 import Section from 'components/Section';
 import Statistics from 'components/Statistics';
+import Notification from 'components/Notification';
 
 export default class App extends Component {
   static defaultProps = {
@@ -52,14 +53,21 @@ export default class App extends Component {
           />
         </Section>
         <Section title="Statistics" className="section--statistics">
-          <Statistics
-            good={good}
-            bad={bad}
-            neutral={neutral}
-            total={this.countTotalFeedback()}
-            positivePercentage={this.countPositiveFeedbackPercentage()}
-            className="statistics"
-          ></Statistics>
+          {this.countTotalFeedback() > 0 ? (
+            <Statistics
+              good={good}
+              bad={bad}
+              neutral={neutral}
+              total={this.countTotalFeedback()}
+              positivePercentage={this.countPositiveFeedbackPercentage()}
+              className="statistics"
+            ></Statistics>
+          ) : (
+            <Notification
+              message="There is no feedback"
+              className="statistics__notification"
+            />
+          )}
         </Section>
       </div>
     );
