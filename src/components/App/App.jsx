@@ -1,75 +1,70 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { useState } from 'react';
 import { GlobalStyle } from '../GlobalStyle';
 import FeedbackOptions from 'components/FeedbackOptions';
 import Section from 'components/Section';
 import Statistics from 'components/Statistics';
 import Notification from 'components/Notification';
 
-export default class App extends Component {
-  static defaultProps = {
-    className: PropTypes.string,
-  };
-
-  state = {
+export default function App({ className }) {
+  const [feedback, setFeedback] = useState({
     good: 0,
     neutral: 0,
     bad: 0,
-  };
+  });
+  const { good, neutral, bad } = feedback;
 
-  onLeaveFeedback = feedback => {
-    this.setState(prevState => {
-      if (!this.state.hasOwnProperty(feedback)) {
-        throw new Error('Bad feedback option');
-      }
-      return { [feedback]: prevState[feedback] + 1 };
+  const onLeaveFeedback = feedbackOption => {
+    if (!feedback.hasOwnProperty(feedbackOption)) {
+      throw new Error('Bad feedback option');
+    }
+    setFeedback({
+      ...feedback,
+      [feedbackOption]: feedback[feedbackOption] + 1,
     });
   };
 
-  countTotalFeedback = () => {
-    const { good, neutral, bad } = this.state;
+  const countTotalFeedback = () => {
+    // const { good, neutral, bad } = feedback;
     return good + neutral + bad;
   };
 
-  countPositiveFeedbackPercentage = () => {
-    const { good, neutral } = this.state;
-    return (
-      Math.floor(((good + neutral) / this.countTotalFeedback()) * 100) || 0
-    );
+  const countPositiveFeedbackPercentage = () => {
+    // const { good, neutral } = feedback;
+    return Math.floor(((good + neutral) / countTotalFeedback()) * 100) || 0;
   };
 
-  render() {
-    const { className } = this.props;
-    const { good, neutral, bad } = this.state;
-    return (
-      <div className={className}>
-        <GlobalStyle />
-        <Section title="Please, leave feedback" className="section--feedback">
-          <FeedbackOptions
-            options={this.state}
-            onLeaveFeedback={this.onLeaveFeedback}
-            className="feedbackOptions"
+  return (
+    <div className={className}>
+      <GlobalStyle />
+      <Section title="Please, leave feedback" className="section--feedback">
+        <FeedbackOptions
+          options={feedback}
+          onLeaveFeedback={onLeaveFeedback}
+          className="feedbackOptions"
+        />
+      </Section>
+      <Section title="Statistics" className="section--statistics">
+        {countTotalFeedback() > 0 ? (
+          <Statistics
+            good={good}
+            bad={bad}
+            neutral={neutral}
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
+            className="statistics"
+          ></Statistics>
+        ) : (
+          <Notification
+            message="There is no feedback"
+            className="statistics__notification"
           />
-        </Section>
-        <Section title="Statistics" className="section--statistics">
-          {this.countTotalFeedback() > 0 ? (
-            <Statistics
-              good={good}
-              bad={bad}
-              neutral={neutral}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.countPositiveFeedbackPercentage()}
-              className="statistics"
-            ></Statistics>
-          ) : (
-            <Notification
-              message="There is no feedback"
-              className="statistics__notification"
-            />
-          )}
-        </Section>
-      </div>
-    );
-  }
+        )}
+      </Section>
+    </div>
+  );
 }
+
+App.propTypes = {
+  className: PropTypes.string.isRequired,
+};
