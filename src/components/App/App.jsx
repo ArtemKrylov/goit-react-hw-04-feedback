@@ -18,10 +18,10 @@ export default function App({ className }) {
     if (!feedback.hasOwnProperty(feedbackOption)) {
       throw new Error('Bad feedback option');
     }
-    setFeedback({
-      ...feedback,
-      [feedbackOption]: feedback[feedbackOption] + 1,
-    });
+    setFeedback(prev => ({
+      ...prev,
+      [feedbackOption]: prev[feedbackOption] + 1,
+    }));
   };
 
   const countTotalFeedback = () => {
